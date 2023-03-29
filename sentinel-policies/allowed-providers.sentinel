@@ -1,0 +1,24 @@
+import "tfconfig-functions" as config
+
+import "strings"
+
+allowed_list = ["azurerm", "aws", "local", "null", "random", "terraform", "tfe", "time"]
+
+allProviders = config.find_all_providers()
+
+
+prohibitedResourcesCount = 0
+prohibitedDataSourcesCount = 0
+
+allResources = config.find_all_resources()
+
+
+allDataSources = config.find_all_datasources()
+
+
+# Main rule
+violations = prohibitedProvidersCount + prohibitedResourcesCount +
+             prohibitedDataSourcesCount
+main = rule {
+  violations is 0
+}

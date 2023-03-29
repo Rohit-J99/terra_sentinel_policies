@@ -1,0 +1,26 @@
+
+import "tfplan-functions" as plan
+
+
+import "azure-functions" as azure
+
+
+param resource_types default [
+  "azurerm_resource_group",
+  "azurerm_virtual_network"
+
+]
+
+
+param mandatory_tags default ["environment"]
+
+
+allAzureResourcesWithStandardTags = azure.find_resources_with_standard_tags(resource_types)
+
+
+violatingAzureResources = plan.filter_attribute_not_contains_list(allAzureResourcesWithStandardTags, "tags", mandatory_tags, true)
+
+
+main = rule {
+  length(violatingAzureResources["messages"]) is 0
+}
